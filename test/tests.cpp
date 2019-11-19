@@ -21,6 +21,7 @@
 #include "catch.hpp"
 #include "../src/vcard.h"
 #include "../src/text_io.h"
+#include "../src/xml_io.h"
 
 using namespace Catch;
 
@@ -153,4 +154,61 @@ TEST_CASE("vCard object", "[vcard]"){
     tw << card;
 
     REQUIRE_THAT(s.str(), StartsWith("BEGIN:VCARD"));
+}
+
+TEST_CASE("xCard parsing", "[xcard]"){
+    std::stringstream s("<?xxx ?><vcard dd='ss'></vcard><param></param></aaa><bbb/>");
+    XmlReader xr;
+    std::vector<vCard> z = xr.parseCards(&s);
+}
+
+TEST_CASE("xCard params generate", "[xcard]"){
+    vCardParamMap params;
+    params.addParam("TYPE", "home");
+    params.addParam("TYPE", "work");
+    params.addParam("LANGUAGE", "en");
+    params.addParam("PREF", "1");
+
+    std::stringstream s;
+    XmlWriter xw(s);
+    xw << params;
+
+    REQUIRE_THAT(s.str(), StartsWith("<parameters>"));
+    REQUIRE_THAT(s.str(), Contains("<PREF><integer>1</integer></PREF>"));
+}
+
+TEST_CASE("xCard property generate", "[xcard]"){
+    vCardProperty p = vCardProperty::createAddress("Street", "City", "Nevada", "112233", "USA");
+
+    vCardParamMap params;
+    params.addParam("TYPE", "home");
+    params.addParam("PREF", "1");
+
+    p << params;
+
+    std::stringstream s;
+    XmlWriter xw(s);
+    xw << p;
+
+    INFO(s.str());
+
+    REQUIRE_THAT(s.str(), Contains("<pobox/><ext/><street>Street</street>"));
+
+    s.str(std::string());
+    vCardProperty n = vCardProperty::createName("fname", "lname");
+    xw << n;
+    REQUIRE_THAT(s.str(), Contains("<N><surname>lname</surname><given>fname</given><additional/><prefix/><suffix/></N>"));
+}
+
+TEST_CASE("xCard generate", "[xcard]") {
+    vCardProperty p = vCardProperty::createAddress("Street", "City", "Nevada", "112233", "USA");
+
+    vCard card;
+    card << p;
+
+    std::stringstream s;
+    XmlWriter tw(s);
+    tw << card;
+
+    REQUIRE_THAT(s.str(), StartsWith("<vcard><ADR>"));
 }

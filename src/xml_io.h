@@ -34,6 +34,16 @@ public:
 
 protected:
     std::ostream *m_os;
+
+    std::string get_type(std::string property_name, int count);
+};
+
+class XmlReader {
+public:
+    XmlReader() {}
+    ~XmlReader() {}
+
+    std::vector<vCard> parseCards(std::istream *is);
 };
 
 #endif //VCARD_XML_IO_H

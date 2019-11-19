@@ -48,6 +48,11 @@ static inline void toupper(std::string &s) {
                    [](unsigned char c){ return std::toupper(c); });
 }
 
+static inline void tolower(std::string &s) {
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+}
+
 std::vector<std::string> split(const std::string s, char separator, bool skip_slashed = false);
 
 

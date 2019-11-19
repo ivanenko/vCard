@@ -16,20 +16,104 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <iostream>
+#include <algorithm>
+#include <string>
 #include "xml_io.h"
+#include "utils.h"
+
+std::map<std::string, std::string> param_types {
+    {"geo", "uri"}, {"pref", "integer"}
+};
+
+std::map<std::string, std::string> property_types {
+    {"fn", "text"}, {"bday", "date"}, {"anniversary", "text"}, {"gender", "sex"},
+    {"lang", "language-tag"}, {"tel", "uri"}, {"geo", "uri"}, {"key", "uri"},
+    {"url", "uri"}, {"photo", "uri"}, {"impp", "uri"}, {"logo", "uri"},
+    {"member", "uri"}, {"related", "uri"}, {"rev", "timestamp"}, {"sound", "uri"},
+    {"uid", "uri"}, {"url", "uri"}, {"fburl", "uri"}, {"caladruri", "uri"},
+    {"caluri", "uri"}, {"source", "uri"}
+};
+
+std::vector<std::string> property_adr_fields {
+    "pobox", "ext", "street", "locality", "region", "code", "country"
+};
+
+std::vector<std::string> property_name_fields {
+        "surname", "given", "additional", "prefix", "suffix"
+};
 
 XmlWriter & XmlWriter::operator << (vCard & vCard)
 {
+    *m_os << "<vcard>";
+
+    for(auto it = vCard.properties().begin(); it != vCard.properties().end(); ++it){
+        *this << *it;
+    }
+
+    *m_os << "</vcard>";
+
     return *this;
 }
 
 XmlWriter & XmlWriter::operator << (std::vector<vCard> & cards)
 {
+    *m_os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    *m_os << "<vcards xmlns=\"urn:ietf:params:xml:ns:vcard-4.0\">";
+
+    for(auto card: cards){
+        *this << card;
+    }
+
+    *m_os << "</vcards>";
+
     return *this;
+}
+
+std::string XmlWriter::get_type(std::string property_name, int count)
+{
+    std::string type("text");
+    tolower(property_name);
+
+    if(property_name == "adr"){
+        if(count < property_adr_fields.size())
+            type = property_adr_fields[count];
+    } else if(property_name == "n"){
+        if(count < property_name_fields.size())
+            type = property_name_fields[count];
+    } else {
+        if(property_types.find(property_name) != property_types.end())
+            type = property_types[property_name];
+    }
+
+    return type;
 }
 
 XmlWriter & XmlWriter::operator << (vCardProperty & prop)
 {
+    *m_os << "<" << prop.getName() << ">";
+
+    if(prop.params().size() > 0){
+        *this << prop.params();
+    }
+
+    int count=0;
+    auto it = prop.values().begin();
+    while(it != prop.values().end()){
+        std::string type = get_type(prop.getName(), count);
+
+        if(it->size() == 0){
+            *m_os << "<" << type << "/>";
+        } else {
+            *m_os << "<" << type << ">" << *it << "</" << type << ">";
+        }
+
+        it++;
+        count++;
+    }
+
+    *m_os << "</" << prop.getName() << ">";
+
     return *this;
 }
 
@@ -42,7 +126,13 @@ XmlWriter & XmlWriter::operator << (vCardParamMap & p)
     auto it = p.begin();
     while(it != p.end()){
         *m_os << "<" << it->first << ">";
-        *m_os << "<text>" << it->second << "</text>";
+
+        std::string type("text");
+        std::string name(it->first);
+        tolower(name);
+        if(param_types.find(name) != param_types.end())
+            type = param_types[name];
+        *m_os << "<" << type << ">" << it->second << "</" << type << ">";
         *m_os << "</" << it->first << ">";
         it++;
     }
@@ -50,4 +140,71 @@ XmlWriter & XmlWriter::operator << (vCardParamMap & p)
     *m_os << "</parameters>";
 
     return *this;
+}
+
+// ================================================================================
+
+std::vector<vCard> XmlReader::parseCards(std::istream *is)
+{
+    std::istream::sentry se(*is, true);
+    std::streambuf* sb = is->rdbuf();
+
+    //auto EOF = std::streambuf::traits_type::eof();
+    int c;
+    while(sb->sgetc() != EOF){
+        c = sb->sbumpc();
+
+        if(c == '<' && sb->sgetc() == '?'){ //skip <?...?>
+            c = sb->sbumpc(); // c=?
+            while(c!=EOF && !(c=='?' && sb->sgetc()=='>'))
+                c = sb->sbumpc();
+
+            // we are on '>' or EOF
+            sb->sbumpc();
+            continue;
+        }
+
+        if(c == '<' && sb->sgetc() == '/') { //close tag
+            std::string tag_name;
+            sb->sbumpc(); // skip '/'
+            c = sb->sbumpc();
+            while(c!=EOF && c!='>'){
+                tag_name += c;
+                c = sb->sbumpc();
+            }
+            std::cout << "{" << tag_name << "}, ";
+
+            // change state
+            continue;
+        }
+
+        if(c == '<'){
+            // read tag name
+            std::string tag_name;
+            c = sb->sbumpc();
+            while (c!=EOF && !std::isspace(c) && c!='/' && c!='>') {
+                tag_name += c;
+                c = sb->sbumpc();
+            }
+
+            std::cout << tag_name << ", ";
+
+            // if c == EOF throw exception XML format error
+            if(std::isspace(c)) { // skip to the end of tag - no need for attributes
+                while(c!=EOF && c!='/' && c!='>')
+                    c = sb->sbumpc();
+            }
+
+            // if c == '/' - closed tag without content
+            // if c == '>' - change state to open tag
+
+            continue;
+        }
+
+        //read text inside tag
+
+    }
+
+    std::vector<vCard> t;
+    return t;
 }
