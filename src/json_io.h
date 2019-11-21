@@ -16,34 +16,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef VCARD_XML_IO_H
-#define VCARD_XML_IO_H
+#ifndef VCARD_JSON_IO_H
+#define VCARD_JSON_IO_H
 
 #include <istream>
 #include "vcard.h"
 
-class XmlWriter {
+class JsonWriter {
 public:
-    XmlWriter(std::ostream& os /*, vCvCardEncoding code = UTF_8*/): m_os(&os) {}
-    ~XmlWriter() {}
+    JsonWriter(std::ostream& os /*, vCvCardEncoding code = UTF_8*/): m_os(&os) {}
+    ~JsonWriter() {}
 
-    XmlWriter & operator << (vCard & vCard);
-    XmlWriter & operator << (std::vector<vCard> & cards);
-    XmlWriter & operator << (vCardProperty & prop);
-    XmlWriter & operator << (vCardParamMap & param);
+    JsonWriter & operator << (vCard & vCard);
+    JsonWriter & operator << (std::vector<vCard> & cards);
+    JsonWriter & operator << (vCardProperty & prop);
+    JsonWriter & operator << (vCardParamMap & param);
 
 protected:
     std::ostream *m_os;
 
-    std::string get_property_type(std::string property_name, int count);
+    std::string get_property_type(std::string property_name);
 };
 
-class XmlReader {
+class JsonReader {
 public:
-    XmlReader() {}
-    ~XmlReader() {}
+    JsonReader() {}
+    ~JsonReader() {}
 
     std::vector<vCard> parseCards(std::istream *is);
 };
 
-#endif //VCARD_XML_IO_H
+#endif //VCARD_JSON_IO_H

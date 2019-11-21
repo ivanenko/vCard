@@ -62,6 +62,16 @@ std::string& vCardParamMap::operator[] (std::string name)
 
 // =================================================================
 
+const std::map<std::string, std::string> vCardProperty::property_types =
+    {
+        {"fn", "text"}, {"bday", "date"}, {"anniversary", "text"}, {"gender", "sex"},
+        {"lang", "language-tag"}, {"tel", "uri"}, {"geo", "uri"}, {"key", "uri"},
+        {"url", "uri"}, {"photo", "uri"}, {"impp", "uri"}, {"logo", "uri"},
+        {"member", "uri"}, {"related", "uri"}, {"rev", "timestamp"}, {"sound", "uri"},
+        {"uid", "uri"}, {"url", "uri"}, {"fburl", "uri"}, {"caladruri", "uri"},
+        {"caluri", "uri"}, {"source", "uri"}, {"adr", "text"}, {"n", "text"}
+    };
+
 vCardProperty::vCardProperty(const std::string& name, const std::string& value)
 {
     m_name = name;

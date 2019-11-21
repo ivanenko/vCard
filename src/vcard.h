@@ -125,6 +125,8 @@ protected:
 class vCardProperty {
 public:
 
+    static const std::map<std::string, std::string> property_types;
+
     /// Used as indexes for ADR property values
     enum AddressFields
     {

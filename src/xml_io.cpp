@@ -26,15 +26,6 @@ std::map<std::string, std::string> param_types {
     {"geo", "uri"}, {"pref", "integer"}
 };
 
-std::map<std::string, std::string> property_types {
-    {"fn", "text"}, {"bday", "date"}, {"anniversary", "text"}, {"gender", "sex"},
-    {"lang", "language-tag"}, {"tel", "uri"}, {"geo", "uri"}, {"key", "uri"},
-    {"url", "uri"}, {"photo", "uri"}, {"impp", "uri"}, {"logo", "uri"},
-    {"member", "uri"}, {"related", "uri"}, {"rev", "timestamp"}, {"sound", "uri"},
-    {"uid", "uri"}, {"url", "uri"}, {"fburl", "uri"}, {"caladruri", "uri"},
-    {"caluri", "uri"}, {"source", "uri"}
-};
-
 std::vector<std::string> property_adr_fields {
     "pobox", "ext", "street", "locality", "region", "code", "country"
 };
@@ -70,7 +61,7 @@ XmlWriter & XmlWriter::operator << (std::vector<vCard> & cards)
     return *this;
 }
 
-std::string XmlWriter::get_type(std::string property_name, int count)
+std::string XmlWriter::get_property_type(std::string property_name, int count)
 {
     std::string type("text");
     tolower(property_name);
@@ -82,8 +73,8 @@ std::string XmlWriter::get_type(std::string property_name, int count)
         if(count < property_name_fields.size())
             type = property_name_fields[count];
     } else {
-        if(property_types.find(property_name) != property_types.end())
-            type = property_types[property_name];
+        if(vCardProperty::property_types.find(property_name) != vCardProperty::property_types.end())
+            type = vCardProperty::property_types.at(property_name);
     }
 
     return type;
@@ -100,7 +91,7 @@ XmlWriter & XmlWriter::operator << (vCardProperty & prop)
     int count=0;
     auto it = prop.values().begin();
     while(it != prop.values().end()){
-        std::string type = get_type(prop.getName(), count);
+        std::string type = get_property_type(prop.getName(), count);
 
         if(it->size() == 0){
             *m_os << "<" << type << "/>";

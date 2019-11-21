@@ -22,6 +22,7 @@
 #include "../src/vcard.h"
 #include "../src/text_io.h"
 #include "../src/xml_io.h"
+#include "../src/json_io.h"
 
 using namespace Catch;
 
@@ -156,6 +157,8 @@ TEST_CASE("vCard object", "[vcard]"){
     REQUIRE_THAT(s.str(), StartsWith("BEGIN:VCARD"));
 }
 
+//======================================================================================
+
 TEST_CASE("xCard parsing", "[xcard]"){
     std::stringstream s("<?xxx ?><vcard dd='ss'></vcard><param></param></aaa><bbb/>");
     XmlReader xr;
@@ -211,4 +214,19 @@ TEST_CASE("xCard generate", "[xcard]") {
     tw << card;
 
     REQUIRE_THAT(s.str(), StartsWith("<vcard><ADR>"));
+}
+
+//============================================================================================
+
+TEST_CASE("jCard generate", "[jcard]") {
+    vCardProperty p = vCardProperty::createAddress("Street", "City", "Nevada", "112233", "USA");
+
+    vCard card;
+    card << p;
+
+    std::stringstream s;
+    JsonWriter tw(s);
+    tw << card;
+
+    REQUIRE_THAT(s.str(), Contains("[\"adr\", {}, \"text\", ["));
 }
