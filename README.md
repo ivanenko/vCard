@@ -40,3 +40,5 @@ tw << card;
 More writers and readers will be added soon (for xCards and jCards formats)
 
 For more examples check test/tests.cpp file
+
+Licensed under the [GNU General Public License](LICENSE.md).
