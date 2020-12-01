@@ -3,7 +3,22 @@
 This is a C++ library for parsing, writing and manipulating vCards.
 Inspired by libvcard 1.0.0 and ez-vcard
 
-### Code exmaples
+## Install
+
+### Dependencies
+- vCard depends on having the `2.x` branch of [Catch2](https://github.com/catchorg/Catch2) installed as the unit tests depend on the cmake files that are installed with it.
+
+### Installing
+```
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+```
+
+
+## Code examples
 
 Reading text .vcf file:
 
@@ -41,4 +56,14 @@ More writers and readers will be added soon (for xCards and jCards formats)
 
 For more examples check test/tests.cpp file
 
-Licensed under the [GNU General Public License](LICENSE.md).
+## Testing
+
+After building the app using the steps above, you can run all the unit tests by calling `make test` inside the build directory.
+
+To rerun one particular test with all debug information, use `ctest -R [NAME OF TEST] -VV` where `[NAME OF TEST]` is where you put the name of the unit test you want to run, such as `vCard_test:vCard`. See https://stackoverflow.com/a/6933301/ for more information.
+
+In general these test names will be of the format `vCard_test:` followed by the name of the test as defined in `tests.cpp`.
+
+## License
+
+vCard is licensed under the [GNU General Public License v3.0 or later](LICENSE.md).
