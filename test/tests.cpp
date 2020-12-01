@@ -19,10 +19,10 @@
 #include <iostream>
 #include <sstream>
 #include "catch.hpp"
-#include "../src/vcard.h"
-#include "../src/text_io.h"
-#include "../src/xml_io.h"
-#include "../src/json_io.h"
+#include "vcard.h"
+#include "text_io.h"
+#include "xml_io.h"
+#include "json_io.h"
 
 using namespace Catch;
 
