@@ -124,7 +124,7 @@ TEST_CASE( "vCard", "[vcard]"){
         "VERSION:4.0\r\n"
         "N:Gump;Forrest;;Mr.;\r\n"
         "FN:Forrest Gump\r\n"
-        "ADR;TYPE=HOME;LABEL=\"42 Plantation St.\\nBaytown\\, LA 30314\\nUnited States of America\":;;42\n"
+        "ADR;TYPE=HOME;LABEL=\"42 Plantation St.\\nBaytown\\, LA 30314\\nUnited States of America\":;;42"
         " Plantation St.;Baytown;LA;30314;United States of America\r\n"
         "END:VCARD";
 
