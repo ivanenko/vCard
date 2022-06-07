@@ -181,6 +181,10 @@ std::vector<vCard> TextReader::parseCards()
             started = true;
         } else if ((line == VC_END_TOKEN) && started) {
             vcards.push_back(current);
+            
+            // Empty the current card
+            current = vCard();
+            
             started = false;
         } else if ((line.find("VERSION") != std::string::npos) && started) {
             size_t pos = line.find(":");
