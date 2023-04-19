@@ -225,6 +225,7 @@ public:
      */
     vCardProperty& operator[] (std::string name);
 
+    vCardProperty& operator[] (int index);
     /**
      * Shortcut for adding property to the vCard
      */

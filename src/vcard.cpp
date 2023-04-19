@@ -171,6 +171,14 @@ vCardProperty& vCard::operator[] (std::string name) {
     throw std::runtime_error("Property not found");
 }
 
+vCardProperty& vCard::operator[](int index) {
+    if (index > m_properties.size() || index < 0) {
+        throw std::runtime_error("Index outside bounds of array");
+    }
+
+    return m_properties[index];
+}
+
 vCard & vCard::operator << (const vCardProperty &p)
 {
     m_properties.push_back(p);
