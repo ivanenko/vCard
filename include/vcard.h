@@ -67,6 +67,7 @@ enum vCardVersion
 
 typedef std::multimap<std::string, std::string>::iterator param_iterator;
 
+
 /**
  * @brief Property parameters holder. We can have multiple parameters with the same name
  * Based on std::multimap
@@ -91,8 +92,8 @@ public:
      */
     int count(std::string name) const { return m_params.count(name); }
 
-    param_iterator begin() {return m_params.begin(); }
-    param_iterator end() {return m_params.end(); }
+    param_iterator begin() { return m_params.begin(); }
+    param_iterator end() { return m_params.end(); }
 
     void addParam(std::string name, std::string value);
     void setParam(std::string name, std::string value);
@@ -164,7 +165,7 @@ public:
     /**
      * Returns list of string values
      */
-    std::vector<std::string>& values() {return m_values; }
+    std::vector<std::string>& values() { return m_values; }
 
     void setParams(vCardParamMap params);
     vCardParamMap& params() { return m_params; }
@@ -194,6 +195,9 @@ protected:
     vCardParamMap m_params;
 };
 
+
+typedef std::vector<vCardProperty>::iterator prop_iterator;
+
 /**
  * @brief vCard object
  */
@@ -219,6 +223,10 @@ public:
     vCardVersion getVersion() { return m_version; }
     std::string getVersionStr();
     void setVersion(vCardVersion v) { m_version = v; }
+
+    //iterator
+    prop_iterator begin() { return m_properties.begin(); }
+    prop_iterator end() { return m_properties.end(); }
 
     /**
      * Returns first found property with the specified name
