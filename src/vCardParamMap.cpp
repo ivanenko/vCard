@@ -6,6 +6,19 @@
 #include "vCardParamMap.h"
 #include "utils.h"
 
+bool vCardParamMap::contains(std::string name) {
+    bool found = false;
+
+    for (const auto& p : m_params) {
+        if (p.first == name) {
+            found = true;
+            break;
+        }
+    }
+
+    return found;
+}
+
 void vCardParamMap::addParam(std::string name, std::string value)
 {
     toupper(name);

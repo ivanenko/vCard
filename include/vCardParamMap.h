@@ -27,6 +27,7 @@ public:
     bool is_empty() const { return m_params.empty(); }
     void clear() { m_params.clear(); }
 
+    bool contains(std::string name);
     /**
      * Returns the number of parameters with specified name
      * @param name The name of the parameter
