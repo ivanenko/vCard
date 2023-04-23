@@ -4,7 +4,7 @@ vcard.cpp
 json_io.cpp
 text_io.cpp
 xml_io.cpp
-utils.cpp )
+utils.cpp vCardParamMap.cpp vCardProperty.cpp)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC 
