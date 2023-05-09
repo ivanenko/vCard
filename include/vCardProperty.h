@@ -17,32 +17,49 @@
 #define VC_TYPE_SEP_TOKEN '='
 
 #define VC_ADDRESS              "ADR"
-#define VC_AGENT                "AGENT"
+#define VC_ANNIVERSARY          "ANNIVERSARY"
 #define VC_BIRTHDAY             "BDAY"
+#define VC_BIRTHPLACE           "BIRTHPLACE"
+#define VC_CALURI               "CALURI"
+#define VC_CALADRURI            "CALADRURI"
 #define VC_CATEGORIES           "CATEGORIES"
-#define VC_CLASS                "CLASS"
-#define VC_DELIVERY_LABEL       "LABEL"
+#define VC_CONTACT_URI          "CONTACT-URI"
+#define VC_CLIENT_PID_MAP       "CLIENTPIDMAP"
+#define VC_DEATH_DATE           "DEATHDATE"
+#define VC_DEATH_PLACE          "DEATHPLACE"
 #define VC_EMAIL                "EMAIL"
+#define VC_EXPERTISE            "EXPERTISE"
 #define VC_FORMATTED_NAME       "FN"
+#define VC_FREEBUSY_URL         "FBURL"
+#define VC_GENDER               "GENDER"
 #define VC_GEOGRAPHIC_POSITION  "GEO"
+#define VC_HOBBY                "HOBBY"
+#define VC_IMPP                 "IMPP"
+#define VC_INTEREST             "INTEREST"
 #define VC_KEY                  "KEY"
+#define VC_KIND                 "KIND"
+#define VC_LANG                 "LANG"
 #define VC_LOGO                 "LOGO"
-#define VC_MAILER               "MAILER"
+#define VC_MEMBER               "MEMBER"
 #define VC_NAME                 "N"
 #define VC_NICKNAME             "NICKNAME"
 #define VC_NOTE                 "NOTE"
 #define VC_ORGANIZATION         "ORG"
+#define VC_ORG_DIRECTORY        "ORG-DIRECTORY"
 #define VC_PHOTO                "PHOTO"
 #define VC_PRODUCT_IDENTIFIER   "PRODID"
+#define VC_RELATED              "RELATED"
 #define VC_REVISION             "REV"
 #define VC_ROLE                 "ROLE"
-#define VC_SORT_STRING          "SORT-STRING"
 #define VC_SOUND                "SOUND"
+#define VC_SOURCE               "SOURCE"
 #define VC_TELEPHONE            "TEL"
 #define VC_TIME_ZONE            "TZ"
 #define VC_TITLE                "TITLE"
+#define VC_UID                  "UID"
 #define VC_URL                  "URL"
 #define VC_VERSION              "VERSION"
+#define VC_XML                  "XML"
 
 /**
  * @brief vCard line property
@@ -73,9 +90,8 @@ public:
     vCardProperty() {}
     vCardProperty(const std::string& group, const std::string& name, const std::string& value);
     vCardProperty(const std::string& name, const std::string& value);
-    vCardProperty(const std::string& name, const std::vector<std::string>& values): m_name(name), m_values(values) {}
-    vCardProperty(const std::string& name, const std::vector<std::string>& values, const vCardParamMap params):
-            m_name(name), m_values(values), m_params(params) {}
+    vCardProperty(const std::string& name, const std::vector<std::string>& values);
+    vCardProperty(const std::string& name, const std::vector<std::string>& values, const vCardParamMap params);
     ~vCardProperty() {}
 
     std::string& getName() { return m_name; }
@@ -92,6 +108,9 @@ public:
     std::vector<std::string>& values() { return m_values; }
 
     void setParams(vCardParamMap params);
+    vCardParamMap getParams() { return m_params; }
+
+    [[deprecated("Method bypasses validation")]]
     vCardParamMap& params() { return m_params; }
 
     /**
@@ -117,6 +136,8 @@ protected:
     std::string m_name;
     std::vector<std::string> m_values;
     vCardParamMap m_params;
+
+    bool isValidParamMap(vCardParamMap params);
 };
 
 #endif //VCARD_VCARDPROPERTY_H
