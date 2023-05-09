@@ -66,6 +66,18 @@ std::string vCardProperty::getValue()
     return s.str();
 }
 
+bool vCardProperty::hasAltId() {
+    bool hasAltId = false;
+
+    for (auto & param : m_params) {
+        if (param.first == "ALTID") {
+            hasAltId = true;
+        }
+    }
+
+    return hasAltId;
+}
+
 vCardProperty & vCardProperty::operator << (const vCardParamMap &p)
 {
     if (!isValidParamMap(p)) {

@@ -110,6 +110,8 @@ public:
     void setParams(vCardParamMap params);
     vCardParamMap getParams() { return m_params; }
 
+    bool hasAltId();
+
     [[deprecated("Method bypasses validation")]]
     vCardParamMap& params() { return m_params; }
 
@@ -120,7 +122,6 @@ public:
     vCardProperty & operator << (const vCardParamMap &p);
 
     /// Static property creators
-
     static vCardProperty createAddress(const std::string& street, const std::string& locality,
                                        const std::string& region, const std::string& postal_code, const std::string& country,
                                        const std::string& post_office_box = "", const std::string& ext_address = "",
