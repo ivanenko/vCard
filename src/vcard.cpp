@@ -40,12 +40,19 @@ vCardProperty& vCard::operator[](int index) {
 
 vCard & vCard::operator << (const vCardProperty &p)
 {
+    if (!checkCardinality(p)) {
+        throw std::invalid_argument("property already present");
+    }
+
     m_properties.push_back(p);
     return *this;
 }
 
 void vCard::addProperty(const vCardProperty& property)
 {
+    if (!checkCardinality(property)) {
+        throw std::invalid_argument("property already present");
+    }
     m_properties.push_back(property);
 }
 
@@ -72,4 +79,31 @@ std::string vCard::getVersionStr()
         case VC_VER_4_0:
             return "4.0";
     }
+}
+
+bool vCard::checkCardinality(vCardProperty prop) {
+    bool isValid = true;
+
+    std::vector<std::string> noMultiples = {
+            VC_ANNIVERSARY, VC_BIRTHDAY, VC_GENDER, VC_KIND, VC_NAME,
+            VC_PRODUCT_IDENTIFIER, VC_REVISION, VC_UID, VC_FORMATTED_NAME
+    };
+
+    // check if prop can have multiples
+    if (std::find(noMultiples.begin(), noMultiples.end(), prop.getName()) != noMultiples.end()) {
+        // check if it's already present and if they have altids
+        bool isPresent = false,
+            hasAltid;
+        for (auto & p : m_properties) {
+            if (p.getName() == prop.getName()) {
+                isPresent = true;
+                hasAltid = p.hasAltId();
+            }
+        }
+        if (isPresent && (!hasAltid || !prop.hasAltId())) {
+           isValid = false;
+        }
+    }
+
+    return isValid;
 }

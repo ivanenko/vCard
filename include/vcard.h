@@ -78,6 +78,8 @@ public:
 protected:
     std::vector<vCardProperty> m_properties;
     vCardVersion m_version;
+
+    bool checkCardinality(vCardProperty prop);
 };
 
 
