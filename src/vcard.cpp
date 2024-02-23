@@ -204,5 +204,8 @@ std::string vCard::getVersionStr()
 
         case VC_VER_4_0:
             return "4.0";
+
+        default: 
+            return "";
     }
 }
