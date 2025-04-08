@@ -18,7 +18,7 @@ sudo make install
 ```
 
 
-## Code exmaples
+## Code examples
 
 Reading text .vcf file:
 
@@ -63,3 +63,7 @@ After building the app using the steps above, you can run all the unit tests by 
 To rerun one particular test with all debug information, use `ctest -R [NAME OF TEST] -VV` where `[NAME OF TEST]` is where you put the name of the unit test you want to run, such as `vCard_test:vCard`. See https://stackoverflow.com/a/6933301/ for more information.
 
 In general these test names will be of the format `vCard_test:` followed by the name of the test as defined in `tests.cpp`.
+
+## License
+
+vCard is licensed under the [GNU General Public License v3.0 or later](LICENSE.md).
